@@ -1,3 +1,8 @@
-inc/*
+inc/raylib.h
+inc/raymath.h
+inc/rcamera.h
+inc/rlgl.h
 lib/libraylib.a
 *.exe
+*.o
+notes.txt
