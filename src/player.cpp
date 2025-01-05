@@ -1,4 +1,5 @@
 #include "../inc/player.h"
+#include "../inc/raymath.h"
 
 Player::Player(){
     this->onGround = true;
@@ -10,6 +11,16 @@ void Player::updatePlayer(Camera& camera){
     if(IsKeyDown(KEY_LEFT_CONTROL)){
         speed *= 2;
     }
+
+    if(IsKeyPressed(KEY_E)){
+        Vector3 forward = Vector3Normalize(Vector3Subtract(camera.target, camera.position));
+        forward = Vector3Scale(forward, TELEPORT_DISTANCE);
+        camera.position = Vector3Add(camera.position, forward);
+        camera.target = Vector3Add(camera.target, forward);
+        if(camera.position.y > EYE_LVL){
+            this->onGround = false;
+        }
+    }  
 
     if(this->onGround && IsKeyDown(KEY_SPACE)){
         this->verticalVel = JUMP_FORCE;
@@ -24,7 +35,7 @@ void Player::updatePlayer(Camera& camera){
 
     if(!this->onGround){
         this->verticalVel -= GRAVITY * GetFrameTime();
-    }
+    } 
 
     Vector3 movement = {
         ((float)IsKeyDown(KEY_W) - (float)IsKeyDown(KEY_S)) * speed,

@@ -8,6 +8,7 @@ const float GRAVITY = 15.0f;
 const float EYE_LVL = 2.0f;
 const float SPRINT_MULT = 2.0f;
 const float MOUSE_SENSITIVITY = 0.1;
+const float TELEPORT_DISTANCE = 7.0f;
 
 class Player{
     public:
