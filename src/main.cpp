@@ -22,7 +22,11 @@ int main() {
 
     Player player;
     Map map;
+
     DisableCursor();
+    rlEnableBackfaceCulling();
+    rlEnableDepthTest();
+    rlEnableDepthMask();
 
     // Game loop
     while (!WindowShouldClose()) {
@@ -30,7 +34,7 @@ int main() {
         BeginDrawing();
             ClearBackground(BLACK);
             BeginMode3D(camera);
-                map.DrawMap(map.initMap(1));
+                map.DrawMap(map.getCurrMap());
             EndMode3D();
             DrawFPS(10,10);
         EndDrawing();

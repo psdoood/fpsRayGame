@@ -4,17 +4,17 @@
 #include <vector>
 
 const int CELL_SIZE = 4;
-const int MAP_WIDTH = 16;
-const int MAP_HEIGHT = 16;
-const float WALL_HEIGHT = 10.0f;
+const float WALL_HEIGHT = 15.0f;
 
 class Map{
     public:
         Map();
         void DrawMap(const std::vector<std::vector<int>>& map);
-        bool CheckCollision(Vector3 pos, float groundLvl);
+        bool CheckCollision(Vector3 pos);
         std::vector<std::vector<int>> initMap(int num);
+        std::vector<std::vector<int>> getCurrMap();
     private:
+        std::vector<std::vector<int>> currMap;
 };
 
 #endif

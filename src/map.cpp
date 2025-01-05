@@ -1,13 +1,12 @@
 #include "../inc/Map.h"
 
 Map::Map(){
-    
+    currMap = initMap(1);
 }
 
 void Map::DrawMap(const std::vector<std::vector<int>>& map){
     int MAP_HEIGHT = map.size();
     int MAP_WIDTH = map[0].size();
-    void DrawCube(Vector3 position, float width, float height, float length, Color color); 
     // Floor 
     DrawPlane((Vector3){(MAP_WIDTH * CELL_SIZE) / 2.0f, 0, (MAP_HEIGHT * CELL_SIZE) / 2.0f},
               (Vector2){(float)MAP_WIDTH * CELL_SIZE, (float)MAP_HEIGHT * CELL_SIZE}, GRAY);
@@ -17,7 +16,7 @@ void Map::DrawMap(const std::vector<std::vector<int>>& map){
     // Walls
     for(int x = 0; x < MAP_WIDTH; x++){
         for(int y = 0; y < MAP_HEIGHT; y++){
-            if(map[x][y] == 1){
+            if(map[y][x] == 1){
                 float xpos = x * CELL_SIZE + CELL_SIZE / 2.0f;
                 float zpos = y * CELL_SIZE + CELL_SIZE / 2.0f;
                 DrawCube((Vector3){xpos, WALL_HEIGHT / 2.0f, zpos}, CELL_SIZE, WALL_HEIGHT, CELL_SIZE, DARKBLUE);
@@ -27,7 +26,7 @@ void Map::DrawMap(const std::vector<std::vector<int>>& map){
     }
 }
 
-bool Map::CheckCollision(Vector3 pos, float groundLvl){
+bool Map::CheckCollision(Vector3 pos){
 
 }
 
@@ -53,8 +52,13 @@ std::vector<std::vector<int>> Map::initMap(int num){
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
             };
+            break;
         default:
             return lvlMap;
     }
     return lvlMap;
+}
+
+std::vector<std::vector<int>> Map::getCurrMap(){
+    return currMap;
 }
