@@ -2,19 +2,20 @@
 #define PLAYER_H
 #include "raylib.h"
 
-const float MOVEMENT_SPEED = 10.0f;
+const float MOVEMENT_SPEED = 0.1f;
 const float JUMP_FORCE = 10.0f;
-const float GRAVITY = 10.0f;
+const float GRAVITY = 15.0f;
 const float EYE_LVL = 2.0f;
+const float SPRINT_MULT = 2.0f;
+const float MOUSE_SENSITIVITY = 0.1;
 
 class Player{
     public:
         Player();
-        void updatePlayer(Player& player, Camera& camera);
+        void updatePlayer(Camera& camera);
     private:
-        Vector3 pos;
-        Vector3 vel;
         bool onGround;
+        float verticalVel;
 };
 
 #endif
