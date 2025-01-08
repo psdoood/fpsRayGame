@@ -30,7 +30,7 @@ int main() {
 
     // Game loop
     while (!WindowShouldClose()) {
-        player.updatePlayer(camera);
+        player.updatePlayer(camera, map);
         BeginDrawing();
             ClearBackground(BLACK);
             BeginMode3D(camera);

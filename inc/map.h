@@ -10,11 +10,13 @@ class Map{
     public:
         Map();
         void DrawMap(const std::vector<std::vector<int>>& map);
-        bool CheckCollision(Vector3 pos);
+        bool CheckCollision(BoundingBox& playerBox);
         std::vector<std::vector<int>> initMap(int num);
+        void initWallBoxes();
         std::vector<std::vector<int>> getCurrMap();
     private:
         std::vector<std::vector<int>> currMap;
+        std::vector<BoundingBox> wallBoxes;
 };
 
 #endif

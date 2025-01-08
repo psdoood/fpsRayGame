@@ -2,6 +2,7 @@
 
 Map::Map(){
     currMap = initMap(1);
+    initWallBoxes();
 }
 
 void Map::DrawMap(const std::vector<std::vector<int>>& map){
@@ -26,8 +27,32 @@ void Map::DrawMap(const std::vector<std::vector<int>>& map){
     }
 }
 
-bool Map::CheckCollision(Vector3 pos){
+void Map::initWallBoxes(){
+    wallBoxes.clear();
+    int MAP_HEIGHT = currMap.size();
+    int MAP_WIDTH = currMap[0].size();
+    for(int x = 0; x < MAP_WIDTH; x++){
+        for(int y = 0; y < MAP_HEIGHT; y++){
+            if(currMap[y][x] == 1){
+                float xpos = x * CELL_SIZE;
+                float zpos = y * CELL_SIZE;
+                BoundingBox box = {
+                    (Vector3){xpos , 0, zpos},
+                    (Vector3){xpos + CELL_SIZE, WALL_HEIGHT, zpos + CELL_SIZE}
+                };
+                wallBoxes.push_back(box);   
+            }
+        }
+    }
+}
 
+bool Map::CheckCollision(BoundingBox& playerBox){
+    for(auto& wall : wallBoxes){
+        if(CheckCollisionBoxes(playerBox, wall)){
+            return true;
+        }
+    }
+    return false;
 }
 
 std::vector<std::vector<int>> Map::initMap(int num){

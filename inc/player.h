@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "raylib.h"
+#include "map.h"
 
 const float MOVEMENT_SPEED = 0.1f;
 const float JUMP_FORCE = 10.0f;
@@ -13,10 +14,13 @@ const float TELEPORT_DISTANCE = 10.0f;
 class Player{
     public:
         Player();
-        void updatePlayer(Camera& camera);
+        void updatePlayer(Camera& camera, Map& map);
+        void updateBox(Vector3 pos);
+        BoundingBox getBox();
     private:
         bool onGround;
         float verticalVel;
+        BoundingBox box;
 };
 
 #endif
