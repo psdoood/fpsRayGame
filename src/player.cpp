@@ -19,12 +19,20 @@ void Player::updatePlayer(Camera& camera, Map& map){
     }
 
     if(IsKeyPressed(KEY_E)){
+        Vector3 oldPos = camera.position;
+        Vector3 oldTarget = camera.target;
         Vector3 forward = Vector3Normalize(Vector3Subtract(camera.target, camera.position));
         forward = Vector3Scale(forward, TELEPORT_DISTANCE);
         camera.position = Vector3Add(camera.position, forward);
         camera.target = Vector3Add(camera.target, forward);
         if(camera.position.y > EYE_LVL){
             this->onGround = false;
+        }
+
+        updateBox(camera.position);
+        if(map.CheckCollision(box)){
+            camera.position = oldPos;
+            camera.target = oldTarget;
         }
     }  
 
