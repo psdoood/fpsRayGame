@@ -43,60 +43,67 @@ void Player::updatePlayer(Camera& camera, Map& map){
         this->verticalVel -= GRAVITY * GetFrameTime();
     } 
 
-    Vector3 movement{
-        ((float)IsKeyDown(KEY_W) - (float)IsKeyDown(KEY_S)) * speed,
-        ((float)IsKeyDown(KEY_D) - (float)IsKeyDown(KEY_A)) * speed,
-        this->verticalVel * GetFrameTime()
-    };
-
     Vector2 delta = GetMouseDelta();
     Vector3 rotation = {
         delta.x * MOUSE_SENSITIVITY,
         delta.y * MOUSE_SENSITIVITY,
         0.0f
     };
-    
+
     Vector3 oldPos = camera.position;
-    UpdateCameraPro(&camera, movement, rotation, 0.0f);
-    updateBox(camera.position); 
-    
+    Vector3 oldTarget = camera.target;
+
+    Vector3 forward = Vector3Subtract(oldTarget, oldPos);
+    forward.y = 0;
+    forward = Vector3Normalize(forward);
+    Vector3 right = Vector3CrossProduct(forward, {0, 1, 0});
+
+    float forwardMove = ((float)IsKeyDown(KEY_W) - (float)IsKeyDown(KEY_S));
+    float rightMove = ((float)IsKeyDown(KEY_D) - (float)IsKeyDown(KEY_A));
+
+    Vector3 movement = {
+        (forward.x * forwardMove + right.x * rightMove) * speed,
+        this->verticalVel * GetFrameTime(),
+        (forward.z * forwardMove + right.z * rightMove) * speed  
+    };
+
+    Vector3 xzMovement = {movement.x, 0, movement.z};
+    camera.position = Vector3Add(oldPos, xzMovement);
+    camera.target = Vector3Add(oldTarget, xzMovement);
+    updateBox(camera.position);
+
+    // Wall sliding section 
     if(map.CheckCollision(box)){
-        Vector3 goodMove = {0, 0, 0};
         camera.position = oldPos;
-
-        Vector3 xMove = {
-            movement.x, 0, 0
-        };
-        UpdateCameraPro(&camera, xMove, rotation, 0.0f);
-        updateBox(camera.position); 
-
-        if(!map.CheckCollision(box)){
-            goodMove.x += xMove.x;
-        }
-        camera.position = oldPos;
-
-        Vector3 yMove = {
-            0, movement.y, 0
-        };
-        UpdateCameraPro(&camera, yMove, rotation, 0.0f);
-        updateBox(camera.position); 
-    
-        if(!map.CheckCollision(box)){
-            goodMove.y = yMove.y;
-        }
-        camera.position = oldPos;
-
-        UpdateCameraPro(&camera, goodMove, rotation, 0.0f);
+        camera.target = oldPos;
+        // try just x movement first
+        float ogZ = xzMovement.z;
+        xzMovement.z = 0;
+        camera.position = Vector3Add(oldPos, xzMovement);
+        camera.target = Vector3Add(oldTarget, xzMovement);
         updateBox(camera.position);
 
         if(map.CheckCollision(box)){
             camera.position = oldPos;
+            camera.target = oldPos;
+            // try just z movement next
+            xzMovement.z = ogZ;
+            xzMovement.x = 0;
+            camera.position = Vector3Add(oldPos, xzMovement);
+            camera.target = Vector3Add(oldTarget, xzMovement);
+            updateBox(camera.position);
+
+            if(map.CheckCollision(box)){
+                camera.position = oldPos;
+                camera.target = oldPos;
+            }
         }
     }
-    oldPos = camera.position;
 
-    camera.position.y += movement.z;
+    camera.position.y += movement.y;
     updateBox(camera.position);
+
+    UpdateCameraPro(&camera, (Vector3){0, 0, 0}, rotation, 0.0f);
 }
 
 void Player::updateBox(Vector3 pos){
