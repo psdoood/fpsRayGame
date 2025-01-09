@@ -43,7 +43,7 @@ void Player::updatePlayer(Camera& camera, Map& map){
         this->verticalVel -= GRAVITY * GetFrameTime();
     } 
 
-    Vector3 movement = {
+    Vector3 movement{
         ((float)IsKeyDown(KEY_W) - (float)IsKeyDown(KEY_S)) * speed,
         ((float)IsKeyDown(KEY_D) - (float)IsKeyDown(KEY_A)) * speed,
         this->verticalVel * GetFrameTime()
@@ -58,12 +58,45 @@ void Player::updatePlayer(Camera& camera, Map& map){
     
     Vector3 oldPos = camera.position;
     UpdateCameraPro(&camera, movement, rotation, 0.0f);
+    updateBox(camera.position); 
     
-    updateBox(camera.position);
     if(map.CheckCollision(box)){
+        Vector3 goodMove = {0, 0, 0};
         camera.position = oldPos;
-    }
 
+        Vector3 xMove = {
+            movement.x, 0, 0
+        };
+        UpdateCameraPro(&camera, xMove, rotation, 0.0f);
+        updateBox(camera.position); 
+
+        if(!map.CheckCollision(box)){
+            goodMove.x += xMove.x;
+        }
+        camera.position = oldPos;
+
+        Vector3 yMove = {
+            0, movement.y, 0
+        };
+        UpdateCameraPro(&camera, yMove, rotation, 0.0f);
+        updateBox(camera.position); 
+    
+        if(!map.CheckCollision(box)){
+            goodMove.y = yMove.y;
+        }
+        camera.position = oldPos;
+
+        UpdateCameraPro(&camera, goodMove, rotation, 0.0f);
+        updateBox(camera.position);
+
+        if(map.CheckCollision(box)){
+            camera.position = oldPos;
+        }
+    }
+    oldPos = camera.position;
+
+    camera.position.y += movement.z;
+    updateBox(camera.position);
 }
 
 void Player::updateBox(Vector3 pos){
