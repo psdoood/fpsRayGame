@@ -27,6 +27,7 @@ void Map::DrawMap(const std::vector<std::vector<int>>& map){
     }
 }
 
+// 
 void Map::initWallBoxes(){
     wallBoxes.clear();
     int MAP_HEIGHT = currMap.size();

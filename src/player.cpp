@@ -13,11 +13,13 @@ Player::Player(){
 }
 
 void Player::updatePlayer(Camera& camera, Map& map){
+    // Sprinting
     float speed = MOVEMENT_SPEED;
     if(IsKeyDown(KEY_LEFT_CONTROL)){
         speed *= 2;
     }
 
+    // Teleporting
     if(IsKeyPressed(KEY_E)){
         Vector3 oldPos = camera.position;
         Vector3 oldTarget = camera.target;
@@ -36,6 +38,7 @@ void Player::updatePlayer(Camera& camera, Map& map){
         }
     }  
 
+    // Vertical movement
     if(this->onGround && IsKeyDown(KEY_SPACE)){
         this->verticalVel = JUMP_FORCE;
         this->onGround = false;
@@ -61,6 +64,7 @@ void Player::updatePlayer(Camera& camera, Map& map){
     Vector3 oldPos = camera.position;
     Vector3 oldTarget = camera.target;
 
+    // Determine the direction of the camera (needed for collision handling)
     Vector3 forward = Vector3Subtract(oldTarget, oldPos);
     forward.y = 0;
     forward = Vector3Normalize(forward);
@@ -80,7 +84,7 @@ void Player::updatePlayer(Camera& camera, Map& map){
     camera.target = Vector3Add(oldTarget, xzMovement);
     updateBox(camera.position);
 
-    // Wall sliding section 
+    // Wall sliding (collision) section 
     if(map.CheckCollision(box)){
         camera.position = oldPos;
         camera.target = oldPos;

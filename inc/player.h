@@ -14,7 +14,9 @@ const float TELEPORT_DISTANCE = 10.0f;
 class Player{
     public:
         Player();
+        // Updates player (camera) position, and handles collison
         void updatePlayer(Camera& camera, Map& map);
+        // Updates players BoundingBox as they move
         void updateBox(Vector3 pos);
         BoundingBox getBox();
     private:

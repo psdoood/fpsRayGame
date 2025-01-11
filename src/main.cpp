@@ -6,12 +6,17 @@
 #include "../inc/Map.h"
 
 int main() {
+    // Window initialization
     const int screenWidth = 800;
     const int screenHeight = 600;
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     InitWindow(screenWidth, screenHeight, "Window");
     SetTargetFPS(120);
+    DisableCursor();
+    rlEnableBackfaceCulling();
+    rlEnableDepthTest();
+    rlEnableDepthMask();
 
     // Camera settings
     Camera camera = {0};
@@ -21,13 +26,9 @@ int main() {
     camera.fovy = 120.0f;                             
     camera.projection = CAMERA_PERSPECTIVE;   
 
+    // Game objects
     Player player;
     Map map;
-
-    DisableCursor();
-    rlEnableBackfaceCulling();
-    rlEnableDepthTest();
-    rlEnableDepthMask();
 
     // Game loop
     while (!WindowShouldClose()) {
